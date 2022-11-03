@@ -1,1 +1,1 @@
-# Theory-of-Evolution
+# Genitic-Algorithm
