@@ -1,3 +1,5 @@
+import random
+
 def mutation(inte,sp,st):
     a = ''
     b = ''
@@ -5,20 +7,35 @@ def mutation(inte,sp,st):
     inte = inte[::-1]
     sp = sp[::-1]
     st = st[::-1]
+    l = []
     for i in range(len(inte)):
         if(inte[i] == '0'):
-            a = inte[:i] + '1' + inte[i+1:]
-            break
+            l.append(i)
+            if(len(l) == 3):
+                break
+    i = random.randint(0,2) 
+    a = inte[:l[i]] + '1' + inte[l[i]+1:]
 
+    l = []
     for i in range(len(sp)):
         if(sp[i] == '0'):
-            b = sp[:i]+ '1'+ sp[i+1:]
-            break
-
+            l.append(i)
+            if(len(l) == 3):
+                break
+            
+    i = random.randint(0,2)      
+    b = sp[:l[i]]+ '1'+ sp[l[i]+1:]
+            
+    l = []
     for i in range(len(st)):
         if(st[i] == '0'):
-            c = st[:i] + '1' + st[i+1:]
-            break
+            l.append(i)
+            if(len(l) == 3):
+                break
+            
+    i = random.randint(0,2)   
+    c = st[:l[i]] + '1' + st[l[i]+1:]
+           
 
     return a[::-1],b[::-1],c[::-1]
 

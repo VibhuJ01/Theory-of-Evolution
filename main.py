@@ -27,14 +27,15 @@ def main():
     update(6)
     updateDiff(6)
     
-    years = 100
+    years = 1000
     for i in range(years//25):  
         child(6*(i+1))
         update(6*(i+2))
         childDiff(6*(i+1))
         updateDiff(6*(i+2))
-        display()
-        displayDiff()
+        print(i)
+    display()
+    displayDiff()
     
         
 def insert():
