@@ -39,22 +39,32 @@ def crossoverDiff(bin,n):
         insert(n+len(j)-1,inte,sp,st,str(n-6+r1)+' '+str(n-6+r2))
 
 def insert(j,inte,sp,st,p):
-    sql = 'insert into different values(%s,%s,%s,%s,%s,%s,%s)'
-    data = [j,0,inte,sp,st,p,inte+sp+st]
+    sql = 'insert into different values(%s,%s,%s,%s,%s,%s,%s,%s)'
+    data = [j,0,inte,sp,st,p,'Alive',inte+sp+st]
     cur1.execute(sql,data)
     mycon.commit()
 
     
 def updateDiff(n):
+    
     for i in range(25):
+        dead_alive_Diff()
+        sql = 'select * from different'
+        cur1.execute(sql)
+        result = cur1.fetchall()
+         
         tot = 0
         for j in range(n):
-            if(j%6 == 0 or j%6 == 1):
+            if(result[j][6] == 'Dead'):
+                continue
+            
+            r = random.randint(0,2)
+            if(r == 0):
                 inte= random.randint(1,2)
                 sp = random.randint(0,1)
                 st = random.randint(0,1)
             
-            elif(j%6 == 2 or j%6 == 3):
+            elif(r == 1):
                 sp= random.randint(1,2)
                 inte = random.randint(0,1)
                 st = random.randint(0,1)
@@ -98,9 +108,9 @@ def displayDiff():
     result = cur1.fetchall()
     total = 0
     for i in result:
-        total += i[6]
+        total += i[7]
         
-    keys = ['Name','Age','Intelligence','Speed','Strength','Parent','Total']
+    keys = ['Name','Age','Intelligence','Speed','Strength','Parent','Dead/Alive','Total']
     print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
     print('Total-> ',total)
     print("\n--------------------------------------------\n")
@@ -114,3 +124,26 @@ def childDiff(n):
     for i in result:
         bin.append(int2bin(i[2],i[3],i[4]))
     crossoverDiff(bin,n)
+
+
+def dead_alive_Diff():
+
+    sql = 'select * from different where d_a = "Alive" and age > 70'
+    cur1.execute(sql)
+    result = cur1.fetchall()
+    if(len(result) == 0):
+        return
+    
+    for i in result:
+        r = random.randint(1,100)
+        if(r<=15):
+            sql = '''update different
+                     set d_a = %s
+                     where name = %s'''
+            
+            data = ('Dead',i[0])
+            cur1.execute(sql,data)
+            mycon.commit()
+            
+
+

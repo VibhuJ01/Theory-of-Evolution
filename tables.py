@@ -10,6 +10,7 @@ def same():
             speed INT not null,
             strength INT not null,
             parent varchar(10) not null,
+            d_a varchar(10) not null,
             total INT not null
             );'''
     cur1.execute(sql)
@@ -23,6 +24,7 @@ def different():
             speed INT not null,
             strength INT not null,
             parent varchar(10) not null,
+            d_a varchar(10) not null,
             total INT not null
             );'''
     cur1.execute(sql)
