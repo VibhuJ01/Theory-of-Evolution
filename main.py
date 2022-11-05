@@ -25,15 +25,16 @@ def main():
     display()
     displayDiff()
     update(6)
+
     updateDiff(6)
     
-    years = 1000
+    years = 10000
     for i in range(years//25):  
         child(6*(i+1))
         update(6*(i+2))
         childDiff(6*(i+1))
         updateDiff(6*(i+2))
-        print(i)
+        print(i+1)
     display()
     displayDiff()
     
@@ -55,14 +56,16 @@ def insert():
             st = random.randint(10,20)
 
         # For Same Tribe
-        sql = 'insert into same values (%s,%s,%s,%s,%s,%s,%s,%s)'
-        data = [i,0,inte,sp,st,'God','Alive',inte+sp+st]
+        sql = 'insert into same values (%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        attract = inte + 2*sp + 2*st
+        data = [i,0,inte,sp,st,attract,'God','Alive',inte+sp+st]
         cur1.execute(sql,data)
         mycon.commit()
 
         # For Different Tribes
-        sql = 'insert into different values (%s,%s,%s,%s,%s,%s,%s,%s)'
-        data = [i,0,inte,sp,st,'God','Alive',inte+sp+st]
+        sql = 'insert into different values (%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+        attract = inte + 2*sp + 2*st
+        data = [i,0,inte,sp,st,attract,'God','Alive',inte+sp+st]
         cur1.execute(sql,data)
         mycon.commit()
 

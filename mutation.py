@@ -11,29 +11,29 @@ def mutation(inte,sp,st):
     for i in range(len(inte)):
         if(inte[i] == '0'):
             l.append(i)
-            if(len(l) == 3):
+            if(len(l) == 2):
                 break
-    i = random.randint(0,2) 
+    i = random.randint(0,1) 
     a = inte[:l[i]] + '1' + inte[l[i]+1:]
 
     l = []
     for i in range(len(sp)):
         if(sp[i] == '0'):
             l.append(i)
-            if(len(l) == 3):
+            if(len(l) == 2):
                 break
             
-    i = random.randint(0,2)      
+    i = random.randint(0,1)      
     b = sp[:l[i]]+ '1'+ sp[l[i]+1:]
             
     l = []
     for i in range(len(st)):
         if(st[i] == '0'):
             l.append(i)
-            if(len(l) == 3):
+            if(len(l) == 2):
                 break
             
-    i = random.randint(0,2)   
+    i = random.randint(0,1)   
     c = st[:l[i]] + '1' + st[l[i]+1:]
            
 

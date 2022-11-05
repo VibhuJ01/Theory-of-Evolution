@@ -29,8 +29,9 @@ def crossover(bin,n):
         j+=2
 
 def insert(j,inte,sp,st,p):
-    sql = 'insert into same values(%s,%s,%s,%s,%s,%s,%s,%s)'
-    data = [j,0,inte,sp,st,p,'Alive',inte+sp+st]
+    sql = 'insert into same values(%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    attract = inte + 2*sp + 2*st
+    data = [j,0,inte,sp,st,attract,p,'Alive',inte+sp+st]
     cur1.execute(sql,data)
     mycon.commit()
 
@@ -45,7 +46,7 @@ def update(n):
         
         tot = 0
         for j in range(n):
-            if(result[j][6] == 'Dead'):
+            if(result[j][7] == 'Dead'):
                 continue
             
             if(j%6 == 0 or j%6 == 1):
@@ -67,14 +68,16 @@ def update(n):
                     set age = age + %s,
                     intelligence = intelligence + %s,
                     speed = speed + %s,
-                    strength = strength + %s
+                    strength = strength + %s,
+                    attractiveness = attractiveness + %s
                     where name = %s'''
-        
-            data = [1,inte,sp,st,j]
+
+            attract = inte + 2*sp + 2*st
+            data = [1,inte,sp,st,attract,j]
             cur1.execute(sql,data)
             mycon.commit()
 
-#Calculte Total
+#Calculate Total
     sql = 'select * from same'
     cur1.execute(sql)
     result = cur1.fetchall()
@@ -95,13 +98,15 @@ def display():
     sql = 'select * from same'
     cur1.execute(sql)
     result = cur1.fetchall()
-    total = 0
-    for i in result:
-        total += i[7]
-        
-    keys = ['Name','Age','Intelligence','Speed','Strength','Parent','Dead/Alive','Total']
+    
+    keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive','Total']
     print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
-    print('Total-> ',total)
+
+    total = 0
+    result = result[len(result)-6:]
+    for i in result:
+        total += i[5]
+    print('Attractiveness of Last 6 Children-> ',total)
     print("\n--------------------------------------------\n")
 
 def child(n):
