@@ -7,7 +7,7 @@ mycon=ms.connect(host="localhost",user="root",db="genetic",passwd="vibhu")
 cur1 = mycon.cursor()
 
 
-def childNat(n):
+def NaturalSelection(n):
     sql = 'select * from nat_select'
     cur1.execute(sql)
     result = cur1.fetchall()
@@ -19,16 +19,22 @@ def childNat(n):
         
     l.sort()
     ind = {}
-    
+    count = 0
+    count1 = 0
     for i in range(len(result)):
-        if(result[i][5] == l[0]):
+        if(result[i][5] == l[0] and count == 0):
             ind['low1'] = i
+            count += 1
 
         elif(result[i][5] == l[1]):
             ind['low2'] = i
             
-        elif(result[i][5] == l[-1]):
+        elif(result[i][5] == l[1]):
+            ind['low2'] = i
+            
+        elif(result[i][5] == l[-1] and count1 == 0):
             ind['high1'] = i
+            count1 += 1
             
         elif(result[i][5] == l[-2]):
             ind['high2'] = i
@@ -79,7 +85,7 @@ def insert(j,inte,sp,st,p):
     mycon.commit()
 
     
-def updateNat():
+def agingNat():
     for i in range(25):
         dead_alive_Nat()
         sql = 'select * from nat_select where d_a = "Alive"'

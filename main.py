@@ -1,6 +1,6 @@
 from crossover import crossover,update,display,child,dead_alive
-from crossoverNat import crossoverNat,updateNat,displayNat
-from crossoverNat import childNat,dead_alive_Nat
+from crossoverNat import crossoverNat,agingNat,displayNat
+from crossoverNat import NaturalSelection,dead_alive_Nat
 
 import random
 
@@ -28,20 +28,23 @@ def main():
     displayNat()
     
     update()
-    updateNat()
+    agingNat()
 
     #Run the program for n years
-    years = 500
+    years = 10000
+    print('Total Generations:',years//25)
     for i in range(years//25):  
         child(6*(i+1))
         update()
-        childNat(6*(i+1))
-        updateNat()
-        print(i+1)
         
+        NaturalSelection(6*(i+1))
+        agingNat()
+        print('Current Generation:',i+1)
     print("\n--------------------------------------------\n")
     display()
     displayNat()
+        
+    
     
 
 #Insert first 6 babies       
