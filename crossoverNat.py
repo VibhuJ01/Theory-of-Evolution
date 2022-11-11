@@ -7,40 +7,85 @@ mycon=ms.connect(host="localhost",user="root",db="genetic",passwd="vibhu")
 cur1 = mycon.cursor()
 
 
-def crossover(bin,n):   
-    j = 0
-    while(j<6):
+def childNat(n):
+    sql = 'select * from nat_select'
+    cur1.execute(sql)
+    result = cur1.fetchall()
+    result = result[n-6:]
+
+    l = []
+    for i in result:
+        l.append(i[5])
+        
+    l.sort()
+    ind = {}
+    
+    for i in range(len(result)):
+        if(result[i][5] == l[0]):
+            ind['low1'] = i
+
+        elif(result[i][5] == l[1]):
+            ind['low2'] = i
+            
+        elif(result[i][5] == l[-1]):
+            ind['high1'] = i
+            
+        elif(result[i][5] == l[-2]):
+            ind['high2'] = i
+
+    result[ind['low1']] = result[ind['high1']]
+    result[ind['low2']] = result[ind['high2']]
+    
+    bin = []
+    for i in result:
+        bin.append(int2bin(i[2],i[3],i[4]))
+    crossoverNat(bin,n)
+
+    
+def crossoverNat(bin,n):   
+    j = []
+    while(len(j)<6):
+        while(True):
+            r1 = random.randint(0,5)
+            if(r1 not in j):
+                j.append(r1)
+                break
+
+        while(True):
+            r2 = random.randint(0,5)
+            if(r2 not in j):
+                j.append(r2)
+                break
+         
         c = []
         d = []
         for k in range(3):
-            a = bin[j][k]
-            b = bin[j+1][k]
+            a = bin[r1][k]
+            b = bin[r2][k]
             c.append(a[:14]+b[14:])
             d.append(b[:14]+a[14:])
             
         inte,sp,st = mutation(c[0],c[1],c[2])
         inte,sp,st = bin2int(inte,sp,st)
-        insert(n+j,inte,sp,st,str(n+j-6)+' '+str(n+j-5))
+        insert(n+len(j)-2,inte,sp,st,str(n-6+r1)+' '+str(n-6+r2))
 
         inte,sp,st = mutation(d[0],d[1],d[2])
         inte,sp,st = bin2int(inte,sp,st)
-        insert(n+j+1,inte,sp,st,str(n+j-6)+' '+str(n+j-5))
-
-        j+=2
+        insert(n+len(j)-1,inte,sp,st,str(n-6+r1)+' '+str(n-6+r2))
 
 def insert(j,inte,sp,st,p):
-    sql = 'insert into same values(%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-    attract = inte + 2*sp + 2*st
+    sql = 'insert into nat_select values(%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    attract = inte + sp + st
     data = [j,0,inte,sp,st,attract,p,'Alive',inte+sp+st]
     cur1.execute(sql,data)
     mycon.commit()
 
     
-def update():
-
+def updateNat():
+    
     for i in range(25):
-        dead_alive()
-        sql = 'select * from same where d_a = "Alive"'
+        dead_alive_Nat()
+        sql = 'select * from nat_select where d_a = "Alive"'
         cur1.execute(sql)
         result = cur1.fetchall()
         n = len(result)
@@ -50,12 +95,13 @@ def update():
             if(result[j][7] == 'Dead'):
                 continue
             
-            if(j%6 == 0 or j%6 == 1):
+            r = random.randint(0,2)
+            if(r == 0):
                 inte= random.randint(1,2)
                 sp = random.randint(0,1)
                 st = random.randint(0,1)
             
-            elif(j%6 == 2 or j%6 == 3):
+            elif(r == 1):
                 sp= random.randint(1,2)
                 inte = random.randint(0,1)
                 st = random.randint(0,1)
@@ -65,7 +111,7 @@ def update():
                 sp = random.randint(0,1)
                 inte = random.randint(0,1)
 
-            sql = '''update same
+            sql = '''update nat_select
                     set age = age + %s,
                     intelligence = intelligence + %s,
                     speed = speed + %s,
@@ -73,20 +119,20 @@ def update():
                     attractiveness = attractiveness + %s
                     where name = %s'''
 
-            attract = inte + 2*sp + 2*st
+            attract = inte + sp + st
             data = [1,inte,sp,st,attract,result[j][0]]
             cur1.execute(sql,data)
             mycon.commit()
 
 #Calculate Total
-    sql = 'select * from same'
+    sql = 'select * from nat_select'
     cur1.execute(sql)
     result = cur1.fetchall()
     j = 0
     for i in result:
         total = 0
         total = i[2]+i[3]+i[4]
-        sql = '''update same
+        sql = '''update nat_select
                 set total = %s
                 where name = %s'''
         data = [total,j]
@@ -94,9 +140,9 @@ def update():
         mycon.commit()
         j+=1
 
-def display():
-    print("Result Same->\n")
-    sql = 'select * from same'
+def displayNat():
+    print("Result Natural Selection->\n")
+    sql = 'select * from nat_select'
     cur1.execute(sql)
     result = cur1.fetchall()
     
@@ -110,19 +156,12 @@ def display():
     print('Attractiveness of Last 6 Children-> ',total)
     print("\n--------------------------------------------\n")
 
-def child(n):
-    sql = 'select * from same'
-    cur1.execute(sql)
-    result = cur1.fetchall()
-    result = result[n-6:]
-    bin = []
-    for i in result:
-        bin.append(int2bin(i[2],i[3],i[4]))
-    crossover(bin,n)
 
-def dead_alive():
-    
-    sql = 'select * from same where d_a = "Alive" and age > 70'
+
+
+def dead_alive_Nat():
+
+    sql = 'select * from nat_select where d_a = "Alive" and age > 70'
     cur1.execute(sql)
     result = cur1.fetchall()
     if(len(result) == 0):
@@ -131,7 +170,7 @@ def dead_alive():
     for i in result:
         r = random.randint(1,100)
         if(r<=15):
-            sql = '''update same
+            sql = '''update nat_select
                      set d_a = %s
                      where name = %s'''
             
@@ -139,4 +178,5 @@ def dead_alive():
             cur1.execute(sql,data)
             mycon.commit()
             
+
 

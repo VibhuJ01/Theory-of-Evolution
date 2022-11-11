@@ -7,6 +7,29 @@ mycon=ms.connect(host="localhost",user="root",db="genetic",passwd="vibhu")
 cur1 = mycon.cursor()
 
 
+def childDiff(n):
+    sql = 'select * from different'
+    cur1.execute(sql)
+    result = cur1.fetchall()
+    result = result[n-6:]
+
+    
+##    l = []
+##    for i in result:
+##        l.append(i[5])
+##        
+##    l.sort()
+##    print(l)
+##    print(result)
+##    result[0] = result[1]
+##    print(result)
+    
+    bin = []
+    for i in result:
+        bin.append(int2bin(i[2],i[3],i[4]))
+    crossoverDiff(bin,n)
+
+    
 def crossoverDiff(bin,n):   
     j = []
     while(len(j)<6):
@@ -46,14 +69,15 @@ def insert(j,inte,sp,st,p):
     mycon.commit()
 
     
-def updateDiff(n):
+def updateDiff():
     
     for i in range(25):
         dead_alive_Diff()
-        sql = 'select * from different'
+        sql = 'select * from different where d_a = "Alive"'
         cur1.execute(sql)
         result = cur1.fetchall()
-         
+        n = len(result)
+        
         tot = 0
         for j in range(n):
             if(result[j][7] == 'Dead'):
@@ -84,7 +108,7 @@ def updateDiff(n):
                     where name = %s'''
 
             attract = inte + 2*sp + 2*st
-            data = [1,inte,sp,st,attract,j]
+            data = [1,inte,sp,st,attract,result[j][0]]
             cur1.execute(sql,data)
             mycon.commit()
 
@@ -120,15 +144,7 @@ def displayDiff():
     print('Attractiveness of Last 6 Children-> ',total)
     print("\n--------------------------------------------\n")
 
-def childDiff(n):
-    sql = 'select * from different'
-    cur1.execute(sql)
-    result = cur1.fetchall()
-    result = result[n-6:]
-    bin = []
-    for i in result:
-        bin.append(int2bin(i[2],i[3],i[4]))
-    crossoverDiff(bin,n)
+
 
 
 def dead_alive_Diff():
