@@ -25,13 +25,11 @@ def crossover(bin,n):
         inte,sp,st = mutation(d[0],d[1],d[2])
         inte,sp,st = bin2int(inte,sp,st)
         insert(n+j+1,inte,sp,st,str(n+j-6)+' '+str(n+j-5))
-
         j+=2
 
 def insert(j,inte,sp,st,p):
-    sql = 'insert into same values(%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-    attract = inte + 2*sp + 2*st
-    data = [j,0,inte,sp,st,attract,p,'Alive',inte+sp+st]
+    sql = 'insert into same values(%s,%s,%s,%s,%s,%s,%s,%s)'
+    data = [j,0,inte,sp,st,inte+sp+st,p,'Alive']
     cur1.execute(sql,data)
     mycon.commit()
 
@@ -73,26 +71,10 @@ def update():
                     attractiveness = attractiveness + %s
                     where name = %s'''
 
-            attract = inte + 2*sp + 2*st
-            data = [1,inte,sp,st,attract,result[j][0]]
+            data = [1,inte,sp,st,inte + sp + st,result[j][0]]
             cur1.execute(sql,data)
             mycon.commit()
 
-#Calculate Total
-    sql = 'select * from same'
-    cur1.execute(sql)
-    result = cur1.fetchall()
-    j = 0
-    for i in result:
-        total = 0
-        total = i[2]+i[3]+i[4]
-        sql = '''update same
-                set total = %s
-                where name = %s'''
-        data = [total,j]
-        cur1.execute(sql,data)
-        mycon.commit()
-        j+=1
 
 def display():
     print("Result Same->\n")
@@ -100,7 +82,7 @@ def display():
     cur1.execute(sql)
     result = cur1.fetchall()
     
-    keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive','Total']
+    keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive']
     print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
 
     total = 0

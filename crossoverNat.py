@@ -41,7 +41,6 @@ def childNat(n):
         bin.append(int2bin(i[2],i[3],i[4]))
     crossoverNat(bin,n)
 
-    
 def crossoverNat(bin,n):   
     j = []
     while(len(j)<6):
@@ -74,15 +73,13 @@ def crossoverNat(bin,n):
         insert(n+len(j)-1,inte,sp,st,str(n-6+r1)+' '+str(n-6+r2))
 
 def insert(j,inte,sp,st,p):
-    sql = 'insert into nat_select values(%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-    attract = inte + sp + st
-    data = [j,0,inte,sp,st,attract,p,'Alive',inte+sp+st]
+    sql = 'insert into nat_select values(%s,%s,%s,%s,%s,%s,%s,%s)'
+    data = [j,0,inte,sp,st,inte+sp+st,p,'Alive']
     cur1.execute(sql,data)
     mycon.commit()
 
     
 def updateNat():
-    
     for i in range(25):
         dead_alive_Nat()
         sql = 'select * from nat_select where d_a = "Alive"'
@@ -119,26 +116,9 @@ def updateNat():
                     attractiveness = attractiveness + %s
                     where name = %s'''
 
-            attract = inte + sp + st
-            data = [1,inte,sp,st,attract,result[j][0]]
+            data = [1,inte,sp,st,inte + sp + st,result[j][0]]
             cur1.execute(sql,data)
             mycon.commit()
-
-#Calculate Total
-    sql = 'select * from nat_select'
-    cur1.execute(sql)
-    result = cur1.fetchall()
-    j = 0
-    for i in result:
-        total = 0
-        total = i[2]+i[3]+i[4]
-        sql = '''update nat_select
-                set total = %s
-                where name = %s'''
-        data = [total,j]
-        cur1.execute(sql,data)
-        mycon.commit()
-        j+=1
 
 def displayNat():
     print("Result Natural Selection->\n")
@@ -146,7 +126,7 @@ def displayNat():
     cur1.execute(sql)
     result = cur1.fetchall()
     
-    keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive','Total']
+    keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive']
     print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
 
     total = 0
@@ -160,7 +140,6 @@ def displayNat():
 
 
 def dead_alive_Nat():
-
     sql = 'select * from nat_select where d_a = "Alive" and age > 70'
     cur1.execute(sql)
     result = cur1.fetchall()
