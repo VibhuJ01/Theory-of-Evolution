@@ -1,6 +1,8 @@
 from tabulate import tabulate
 from mutation import mutation,bin2int,int2bin
+
 import random
+import statistics as st #To find Variance
 
 import mysql.connector as ms
 mycon=ms.connect(host="localhost",user="root",db="genetic",passwd="vibhu")
@@ -67,8 +69,8 @@ def crossoverNat(bin,n):
         for k in range(3):
             a = bin[r1][k]
             b = bin[r2][k]
-            c.append(a[:14]+b[14:])
-            d.append(b[:14]+a[14:])
+            c.append(a[:28]+b[28:])
+            d.append(b[:28]+a[28:])
             
         inte,sp,st = mutation(c[0],c[1],c[2])
         inte,sp,st = bin2int(inte,sp,st)
@@ -142,8 +144,14 @@ def displayNat():
     print('Attractiveness of Last 6 Children-> ',total)
     print("\n--------------------------------------------\n")
 
+    total = []
+    for i in result:
+        total.append(st.variance([i[2],i[3],i[4]]))
 
-
+    sum1 = round(sum(total))
+        
+    print('Variance in Last 6 Children-> ',sum1)
+    print("\n--------------------------------------------\n")
 
 def dead_alive_Nat():
     sql = 'select * from nat_select where d_a = "Alive" and age > 70'

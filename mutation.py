@@ -64,15 +64,15 @@ def int2bin(binte,bsp,bst):
     y = ''
     z = ''
     
-    while(binte>0 or len(x)<16):
+    while(binte>0 or len(x)<30):
         x+=str(binte%2)
         binte//=2
         
-    while(bsp>0 or len(y)<16):
+    while(bsp>0 or len(y)<30):
         y+=str(bsp%2)
         bsp//=2
         
-    while(bst>0 or len(z)<16):
+    while(bst>0 or len(z)<30):
         z+=str(bst%2)
         bst//=2
     

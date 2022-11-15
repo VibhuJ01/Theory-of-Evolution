@@ -1,6 +1,8 @@
 from tabulate import tabulate
 from mutation import mutation,bin2int,int2bin
+
 import random
+import statistics as st #To find Variance
 
 import mysql.connector as ms
 mycon=ms.connect(host="localhost",user="root",db="genetic",passwd="vibhu")
@@ -15,8 +17,8 @@ def crossover(bin,n):
         for k in range(3):
             a = bin[j][k]
             b = bin[j+1][k]
-            c.append(a[:14]+b[14:])
-            d.append(b[:14]+a[14:])
+            c.append(a[:28]+b[28:])
+            d.append(b[:28]+a[28:])
             
         inte,sp,st = mutation(c[0],c[1],c[2])
         inte,sp,st = bin2int(inte,sp,st)
@@ -34,7 +36,7 @@ def insert(j,inte,sp,st,p):
     mycon.commit()
 
     
-def update():
+def aging():
 
     for i in range(25):
         dead_alive()
@@ -77,7 +79,7 @@ def update():
 
 
 def display():
-    print("Result Same->\n")
+    print("Result Deterministic->\n")
     sql = 'select * from same'
     cur1.execute(sql)
     result = cur1.fetchall()
@@ -90,6 +92,15 @@ def display():
     for i in result:
         total += i[5]
     print('Attractiveness of Last 6 Children-> ',total)
+    print("\n--------------------------------------------\n")
+
+    total = []
+    for i in result:
+        total.append(st.variance([i[2],i[3],i[4]]))
+
+    sum1 = round(sum(total))
+        
+    print('Variance in Last 6 Children-> ',sum1)
     print("\n--------------------------------------------\n")
 
 def child(n):
