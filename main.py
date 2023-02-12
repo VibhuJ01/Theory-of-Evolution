@@ -4,6 +4,8 @@ from non_deterministic import childDiff,dead_alive_Diff
 from natural_selection import crossoverNat,agingNat,displayNat
 from natural_selection import NaturalSelection,dead_alive_Nat
 
+from graph import graph
+
 import random
 
 import mysql.connector as ms
@@ -31,33 +33,43 @@ def main():
     #Insert new data
     print("\n--------------------------------------------\n")
     insert()
-    display()
-    displayDiff()
-    displayNat()
+    display(0)
+    displayDiff(0)
+    displayNat(0)
     
     aging()
     agingDiff()
     agingNat()
 
     #Run the program for n years
-    years = 10000
+    years = 100
     print('Total Generations:',years//25)
+    l1 = []
+    l2 = []
+    l3 = []
     for i in range(years//25):  
         child(6*(i+1))
         aging()
+        sum1 = display(1)
+        l1.append(sum1)
         
         childDiff(6*(i+1))
         agingDiff()
+        sum1 = displayDiff(1)
+        l2.append(sum1)
         
         NaturalSelection(6*(i+1))
         agingNat()
+        sum1 = displayNat(1)
+        l3.append(sum1)
         print('Current Generation:',i+1)
         
     print("\n--------------------------------------------\n")
-    display()
-    displayDiff()
-    displayNat()
-        
+    display(0)
+    displayDiff(0)
+    displayNat(0)
+    graph(l1,l2,l3,years)
+    
 #Insert first 6 babies       
 def insert():
     for i in range(6):

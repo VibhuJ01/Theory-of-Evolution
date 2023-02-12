@@ -128,30 +128,38 @@ def agingNat():
             cur1.execute(sql,data)
             mycon.commit()
 
-def displayNat():
-    print("Result Natural Selection->\n")
+def displayNat(a):
+    
     sql = 'select * from nat_select'
     cur1.execute(sql)
     result = cur1.fetchall()
-    
-    keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive']
-    print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
-
-    total = 0
     result = result[len(result)-6:]
-    for i in result:
-        total += i[5]
-    print('Attractiveness of Last 6 Children-> ',total)
-    print("\n--------------------------------------------\n")
 
+    #Find Sum of variance
     total = []
     for i in result:
         total.append(st.variance([i[2],i[3],i[4]]))
 
     sum1 = round(sum(total))
-        
-    print('Variance in Last 6 Children-> ',sum1)
-    print("\n--------------------------------------------\n")
+
+    if(a == 0):
+        #Find Attractiveness
+        total = 0
+        for i in result:
+            total += i[5]
+            
+        print("Result Natural Selection->\n") 
+        keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive']
+        print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
+
+        print('Attractiveness of Last 6 Children-> ',total)
+        print("\n--------------------------------------------\n")
+
+        print('Variance in Last 6 Children-> ',sum1)
+        print("\n--------------------------------------------\n")
+
+    elif(a == 1):
+        return sum1
 
 def dead_alive_Nat():
     sql = 'select * from nat_select where d_a = "Alive" and age > 70'

@@ -78,30 +78,38 @@ def aging():
             mycon.commit()
 
 
-def display():
-    print("Result Deterministic->\n")
+def display(a):
     sql = 'select * from same'
     cur1.execute(sql)
     result = cur1.fetchall()
-    
-    keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive']
-    print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
-
-    total = 0
     result = result[len(result)-6:]
-    for i in result:
-        total += i[5]
-    print('Attractiveness of Last 6 Children-> ',total)
-    print("\n--------------------------------------------\n")
+    
 
+    #Find Sum of variance
     total = []
     for i in result:
         total.append(st.variance([i[2],i[3],i[4]]))
 
     sum1 = round(sum(total))
+
+    if(a == 0):
+        #Find Attractiveness
+        total = 0
+        for i in result:
+            total += i[5]
+            
+        print("Result Deterministic->\n")
+        keys = ['Name','Age','Intelligence','Speed','Strength','Attractive','Parent','Dead/Alive']
+        print(tabulate(result, headers = keys, tablefmt = 'pretty',showindex = False))
+
+        print('Attractiveness of Last 6 Children-> ',total)
+        print("\n--------------------------------------------\n")
         
-    print('Variance in Last 6 Children-> ',sum1)
-    print("\n--------------------------------------------\n")
+        print('Variance in Last 6 Children-> ',sum1)
+        print("\n--------------------------------------------\n")
+    
+    elif(a == 1):
+        return sum1
 
 def child(n):
     sql = 'select * from same'
